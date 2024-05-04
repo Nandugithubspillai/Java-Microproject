@@ -1,0 +1,94 @@
+import java.sql.*;
+import javax.swing.*;
+import java.awt.event.*;
+class Medicines extends JFrame implements ActionListener
+{
+JButton a;
+JTextField n,q,p,s;
+JLabel nm,qn,pr,st;
+Medicines()
+{
+super("Nandana.S.Pillai-csc(s3)-rn:3");
+a=new JButton("ADD");
+n=new JTextField(10);
+q=new JTextField(8);
+p=new JTextField(8);
+s=new JTextField(25);
+nm=new JLabel("Name");
+qn=new JLabel("Quantity(mg)");
+pr=new JLabel("Price");
+st=new JLabel("Status");
+add(a);
+add(n);
+add(q);
+add(p);
+add(s);
+add(nm);
+add(qn);
+add(pr);
+add(st);
+setLayout(null);
+a.setBounds(140,130,70,40);
+n.setBounds(10,40,80,30);
+q.setBounds(10,100,80,30);
+p.setBounds(10,160,80,30);
+s.setBounds(140,70,150,30);
+nm.setBounds(10,10,200,20);
+qn.setBounds(10,80,200,20);
+pr.setBounds(10,140,200,20);
+st.setBounds(140,50,200,20);
+setSize(500,300);
+setVisible(true);
+setDefaultCloseOperation(EXIT_ON_CLOSE);
+a.addActionListener(this);
+}
+public void actionPerformed(ActionEvent ae)
+{
+String n1,q1,p1;
+n1=n.getText();
+q1=q.getText();
+p1=p.getText();
+
+try
+{
+Class.forName("com.mysql.jdbc.Driver");
+Connectioncon=
+DriverManager.getConnection("jdbc:mysql://localhost:3306/pharmacy","root","password");
+Statement stm=con.createStatement();
+String qry1="insert into
+medicines(name,quantity,price)values('"+n1+"',"+q1+","+p1+")";
+int count=stm.executeUpdate(qry1);
+if(count==1)
+{
+s.setText("Added Successfully");
+}
+else
+{
+s.setText("Added Unsuccessfully");
+}
+String qry2="select * from medicines";
+ResultSet rs=stm.executeQuery(qry2);
+while(rs.next())
+{
+n.setText(rs.getString(1));
+q.setText(Integer.toString(rs.getInt(2)));
+p.setText(Integer.toString(rs.getInt(3)));
+}
+rs.close();
+stm.close();
+con.close();
+}
+catch(ClassNotFoundException e)
+{
+System.out.println(e);
+}
+catch(SQLException e)
+{
+System.out.println(e);
+}
+}
+public static void main(String args[])
+{
+Medicines obj=new Medicines();
+}
+}
